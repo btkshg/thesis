@@ -1,8 +1,8 @@
 <template>
-    <div>
+    <div class="m-8">
         dash
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 </script>

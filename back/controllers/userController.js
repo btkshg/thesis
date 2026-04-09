@@ -8,13 +8,14 @@ const JWT_SECRET = "484de9ab78436b2c";
 const login = async(req, res) => {
     const {email, password} = req.body;
     try {
-        const result = await pool.query('SELECT * FROM users WHERE email == $1', email);
+        const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
         if(result.rows.length === 0){
             return res.status(401).json({message: 'No user found'});
         }
         const user = result.rows[0];
-
-        if(bcrypt.compare(password, user.password)){
+        
+        const isMatch = await bcrypt.compare(password, user.password);
+        if(isMatch){
             const token = jwt.sign(
                 {id: user.id, role: user.role}, JWT_SECRET, {expiresIn: '8h'}
             );
@@ -56,12 +57,12 @@ const getUserById = async (req, res) => {
 
 //create user   
 const createUser = async (req, res) => {
-    const { name, email, role, password, hourly_rate } = req.body;
+    const { full_name, email, role, password, hourly_rate } = req.body;
     try {
         const hashPassword = await bcrypt.hash(password, 10); 
         const result = await pool.query(
-            'INSERT INTO users (full_name, email, role, password, hourly_rate) VALUES ($1, $2, $3, $4, $5) RETURNING id, name, email',
-            [name, email, role, hashPassword, hourly_rate]
+            'INSERT INTO users (full_name, email, role, password, hourly_rate) VALUES ($1, $2, $3, $4, $5) RETURNING id, full_name, email',
+            [full_name, email, role, hashPassword, hourly_rate]
         );
         res.json(result.rows[0]);
     } catch (err) {

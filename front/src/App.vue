@@ -7,7 +7,7 @@ const route = useRoute();
 </script>
 
 <template class="">
-  <div class="flex w-full h- p-0 m-0">
+  <div class="flex w-full h- p-0 m-0 relative">
     <!-- <Header/> -->
     <Sidebar v-if="route.path !== '/login'"/>
     <div class="w-full">
