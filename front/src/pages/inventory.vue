@@ -1,12 +1,12 @@
 <template>
     <div class="m-8">
-        <div v-for="product in products" class="grid grid-cols-7 my-2 p-2 rounded bg-gray-100 hover:bg-blue-100">
+        <div v-for="product in products" class="grid grid-cols-7 my-2 p-2 rounded bg-gray-100 hover:bg-blue-50">
             <h1 class="col-span-2">{{product.name}}</h1>
-            <p>{{ product.category }}</p>
-            <p>{{ product.base_price }}</p>
-            <p>{{ product.current_price }}</p>
-            <p>{{ product.stock_quantity }}</p>
-            <p>{{ product.reorder_level }}</p>
+            <p class="text-end">{{ product.category }}</p>
+            <p class="text-end">{{ product.base_price }}</p>
+            <p class="text-end">{{ product.current_price }}</p>
+            <p class="text-end">{{ product.stock_quantity }}</p>
+            <p class="text-end">{{ product.reorder_level }}</p>
         </div>
         <!-- {{products}} -->
     </div>
