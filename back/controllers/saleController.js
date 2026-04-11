@@ -46,7 +46,7 @@ const getSalesBetween = async (req, res) => {
     const { from, to } = req.query;
     if (!from || !to) {
         return res.status(400).json({ message: 'from and to query params are required' });
-    }
+    }   
     try {
         const result = await pool.query(
             `SELECT sh.*, u.full_name as cashier
@@ -116,10 +116,62 @@ const createSale = async (req, res) => {
     } catch (err) {
         await client.query('ROLLBACK');
         console.error(err.message);
-        res.status(500).json({ error: err.message || 'Transaction failed' });
+        res.status(500).send('Transaction failed' );
     } finally {
         client.release();
     }
 };
 
-module.exports = { getAllSales, getSaleById, getSalesBetween, createSale };
+//for dashboard
+//total sale
+
+//total transactions
+const totalTrans = async(req, res) => {
+    try {
+        const result = await pool.query("SELECT COUNT(id) FROM sales_header WHERE sale_time >= NOW() - INTERVAL '30 days';");
+        res.json(result.rows);
+    } catch(err) {
+        res.status(500).send("Server error");
+    }
+}
+
+//for chart
+const dailyRev = async(req, res) => {
+    try {
+        const result = await pool.query(`SELECT DATE(sale_time) as date, SUM(total_amount) as revenue 
+            FROM sales_header 
+            WHERE sale_time >= CURRENT_DATE - INTERVAL '30 days'
+            GROUP BY DATE(sale_time)
+            ORDER BY DATE(sale_time) ASC
+            `);
+            res.json(result.rows);
+    } catch(err) {
+        res.status(500).send("Server error");
+    }
+}
+
+//sale growth month comparison
+const salesGrowth = async (req, res) => {
+    try {
+        const query = `SELECT 
+                SUM(CASE WHEN sale_time >= CURRENT_DATE - INTERVAL '30 days' THEN total_amount ELSE 0 END) as current_period,
+                SUM(CASE WHEN sale_time >= CURRENT_DATE - INTERVAL '60 days' 
+                AND sale_time < CURRENT_DATE - INTERVAL '30 days' THEN total_amount ELSE 0 END) as previous_period
+                FROM sales_header;`;
+        const result = await pool.query(query);
+        const { current_period, previous_period } = result.rows[0];
+
+        let growth = 0;
+        if (previous_period > 0) {
+            growth = ((current_period - previous_period) / previous_period) * 100;
+        }
+        res.json({ 
+            growth: growth.toFixed(2), 
+            currentTotal: current_period,
+        });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+module.exports = { getAllSales, getSaleById, getSalesBetween, createSale, totalTrans, dailyRev, salesGrowth };

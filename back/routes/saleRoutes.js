@@ -1,10 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const { getAllSales, getSaleById, getSalesBetween, createSale, updateSale } = require('../controllers/saleController');
+const { getAllSales, getSaleById, getSalesBetween, createSale, totalTrans, dailyRev, salesGrowth } = require('../controllers/saleController');
 
+router.get('/growth', salesGrowth);
+router.get('/totalTrans', totalTrans);
+router.get('/range', getSalesBetween);
+router.get('/dailyRevenue', dailyRev);
 router.get('/', getAllSales);
 router.get('/:id', getSaleById);
-router.get('/sales/range', getSalesBetween);
 router.post('/', createSale);
 
 module.exports = router;
