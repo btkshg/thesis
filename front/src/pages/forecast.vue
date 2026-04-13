@@ -1,6 +1,6 @@
 <template>
-    <div class="p-8">
-        <h1 class="text-2xl font-bold my-4">Forecast</h1>
+    <div class="m-8">
+        <h1 class="text-2xl font-bold mt-4 mb-8">Forecast</h1>
         <div class="flex gap-4 items-center mb-6">
             <select v-model="days" class="border rounded-lg px-3 py-2 text-sm">
                 <option :value="7">7 days</option>
@@ -12,9 +12,15 @@
                 Generate
             </button>
         </div>
-        <div class="bg-white rounded-2xl shadow-sm p-6">
-            <Line :data="chartData" :options="chartOptions" />
+        <div class="w-5/6">
+            <p v-if="!loader">Click the button to generate the forecast. It might take few minutes</p>
+            <p v-if="loader"><Loader2 class="animate-spin "/></p>
+            <Line v-if="render" :data="chartData" :options="chartOptions" />
         </div>
+        <h1 class="text-2xl font-bold my-4">Staffing</h1>
+        <div>Loading...</div>
+        <h1 class="text-2xl font-bold my-4">Error rates</h1>
+        <div>Absolute mean error and accuracy</div>
     </div>
 </template>
 
@@ -22,6 +28,7 @@
 import api from '@/api'
 import { ref, computed } from 'vue'
 import { Line } from 'vue-chartjs'
+import { Loader2 } from 'lucide-vue-next'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -45,6 +52,8 @@ ChartJS.register(
 const days = ref(21)
 const actualData = ref<{ date: string, total: number }[]>([])
 const forecastData = ref<{ date: string, predicted_sales: number }[]>([])
+const loader = ref(false)
+const render = ref(false)
 
 const loadActual = async () => {
     const to = new Date().toISOString().split('T')[0]
@@ -68,9 +77,12 @@ const loadActual = async () => {
 const loadForecast = async () => {
     const response = await api.get(`/forecast/sales?days=${days.value}`)
     forecastData.value = response.data.forecast
+    loader.value = false
+    render.value = true
 }
 
 const loadAll = async () => {
+    loader.value = true;
     await Promise.all([loadActual(), loadForecast()])
 }
 

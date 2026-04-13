@@ -2,7 +2,7 @@ const pool = require('../db');
 
 const getAllShifts = async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM shifts ORDER BY start_time DESC');
+        const result = await pool.query('SELECT sh.*, u.full_name FROM shifts sh INNER JOIN users u ON sh.user_id = u.id ORDER BY sh.start_time DESC');
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
