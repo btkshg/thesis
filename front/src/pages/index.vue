@@ -1,53 +1,53 @@
 <template>
     <div class="m-8">
-        <h1 class="text-2xl font-bold my-4">Dashboard</h1>
-        <div class="grid grid-cols-4 gap-4">
-            <div class="bg-blue-50 p-4 rounded-xl flex gap-4 items-center ">
-              <BanknoteArrowDown class="w-16 h-16 text-green-500" />
+        <h1 class="text-2xl font-medium text-blue-900 my-4 mb-6">Dashboard</h1>
+        <div class="grid grid-cols-4 gap-8">
+            <div class="bg-white px-4 py-2 rounded-lg flex gap-4 items-center drop-shadow-md">
+              <BanknoteArrowDown class="w-10 h-10 text-green-500" />
                 <div>
-                    <h1 class="text-gray-500 font-semibold ">Total Sales Last Month</h1>
-                    <p class="font-bold text-4xl">{{ salesInfo.currentTotal }}$</p>
+                    <h1 class="text-gray-500 text-sm ">Total Sales Last Month</h1>
+                    <p class="font-semibold text-2xl">{{ salesInfo.currentTotal }}$</p>
                 </div>
             </div>
-            <div class="bg-blue-50 p-4 rounded-xl flex gap-4 items-center ">
-                <ScanBarcode class="w-16 h-16 text-gray-600" />
-                <div>
-                    <h1 class="text-gray-500 font-semibold">Total Transactions</h1>
-                    <p class="font-bold text-4xl">{{ trans }}</p>
-                </div>
-            </div>
-            <div class="bg-blue-50 p-4 rounded-xl flex gap-4 items-center ">
+            <div class="bg-white px-4 py-2 rounded-lg flex gap-4 items-center drop-shadow-md">
                 <TrendingUp v-if="salesInfo.growth > 0" class="w-16 h-16 text-green-500" />
-                <TrendingDown v-else class="w-16 h-16 text-red-500" />
+                <TrendingDown v-else class="w-10 h-10 text-red-500" />
                 <div>
-                    <h1 class="text-gray-500 font-semibold">Sales Growth</h1>
-                    <p class="font-bold text-4xl">{{ salesInfo.growth }}%</p>
+                    <h1 class="text-gray-500 text-sm">Sales Growth</h1>
+                    <p class="font-semibold text-2xl">{{ salesInfo.growth }}%</p>
                 </div>
             </div>
-            <div class="bg-blue-50 p-4 rounded-xl flex gap-4 items-center ">
-                <Package class="w-16 h-16 text-yellow-500" />
+            <div class="bg-white px-4 py-2 rounded-lg flex gap-4 items-center drop-shadow-md">
+                <ScanBarcode class="w-8 h-8 text-gray-600" />
                 <div>
-                    <h1 class="text-gray-500 font-semibold">Low-Stock Products</h1>
-                    <p class="font-bold text-4xl">{{ stock.length }}</p>
+                    <h1 class="text-gray-500 text-sm">Total Transactions</h1>
+                    <p class="font-semibold text-2xl">{{ trans }}</p>
+                </div>
+            </div>
+            <div class="bg-white px-4 py-2 rounded-lg flex gap-4 items-center drop-shadow-md">
+                <Package class="w-8 h-8 text-yellow-500" />
+                <div>
+                    <h1 class="text-gray-500 text-sm">Low-Stock Products</h1>
+                    <p class="font-semibold text-2xl">{{ stock.length }}</p>
                 </div>
             </div>
         </div>
-        <div class="grid grid-cols-4 gap-4 mt-4">
-            <div class="col-span-3 bg-blue-50 rounded-xl px-6 py-4 h-min">
-                <h2 class="text-xl font-bold mb-4">Last 30 Days Revenue</h2>
+        <div class="grid grid-cols-4 gap-6 mt-4">
+            <div class="col-span-3 rounded-sm px-6 py-4 h-min drop-shadow-md bg-white">
+                <h2 class="text-xl text-blue-900 font-semi mb-6">Last 30 Days Revenue</h2>
                 <Line class="" :data="chartData" :options="chartOptions" />
             </div>
-            <div class="bg-blue-50 p-4 rounded-xl flex flex-col">
-              <h1 class="font-bold text-xl mb-4">Recent Sales</h1>
-              <div class="grid grid-cols-4 gap-4 mb-2 font-semibold text-gray-500 border-b pb-2">
+            <div class="bg-white p-4 rounded-xl flex flex-col drop-shadow-md">
+              <h1 class=" text-xl text-blue-900 mb-4">Recent Sales</h1>
+              <div class="grid grid-cols-4 gap-4 mb-2 font-semibold text-gray-800 border-b border-gray-300 pb-3">
                 <h1>ID</h1>
                 <h1>Amount</h1>
                 <h1 class="col-span-2 text-end">Date</h1>
               </div>
-              <div v-for="sales in recentSales.slice(0,12)" class="grid grid-cols-4 my-1">
+              <div v-for="sales in recentSales.slice(0,14)" class="grid grid-cols-4 my-1 text-sm">
                 <p class="font-light">{{ sales.id }}</p>
                 <!-- <p>{{ sales.cashier }}</p> -->
-                <p class="font-semibold text-gray-700">{{ sales.total_amount }}$</p>
+                <p class="font- text-gray-600">{{ sales.total_amount }}$</p>
                 <p class="col-span-2 text-end font-thin">{{ 
                    new Date(sales.sale_time).toLocaleString('en-US', { 
                      hour: 'numeric', 
@@ -151,7 +151,7 @@ const chartData = computed(() => ({
       backgroundColor: 'rgba(37, 99, 235, 0.08)',
       borderWidth: 2,
       pointRadius: 3,
-      pointBackgroundColor: '#2563eb',
+      pointBackgroundColor: '#0f2c69',
       tension: 0.4,
       fill: true,
     }
@@ -162,7 +162,7 @@ const chartOptions = {
   responsive: true,
   maintainAspectRatio: true,
   plugins: {
-    legend: { display: false },
+    legend: { display: true },
     tooltip: {
       callbacks: {
         label: (context: any) => `$${context.parsed.y.toLocaleString()}`

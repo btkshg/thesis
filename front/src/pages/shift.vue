@@ -1,10 +1,10 @@
 <template>
     <div class="m-8">
-        <h1 class="text-2xl font-bold mt-4 mb-8">Staff Scheduling</h1>
+        <h1 class="text-2xl font-medium text-blue-900 my-4 mb-6">Shift Schedule</h1>
         <div class="grid grid-cols-2 gap-8">
-            <div class="p-6 border rounded-2xl">
-                <h1 class="font-bold mb-4 text-gray-500">Shift History</h1>
-                <div v-for="shift in shifts" class="grid grid-cols-4 gap-4 my-2">
+            <div class="p-6 bg-white drop-shadow-lg rounded-xl">
+                <h1 class="font- mb-4 text-gray-900 border-b border-gray-300 pb-4">Shift History</h1>
+                <div v-for="shift in shifts" class="grid grid-cols-4 gap-4 my-4 font-thin">
                     <p>{{ shift.full_name }}</p>
                     <p class="text-end">{{ 
                        new Date(shift.start_time).toLocaleString('en-US', { 
@@ -24,20 +24,20 @@
                          day: 'numeric' 
                        }).replace(',', '') 
                     }}</p>
-                    <p v-else>Ongoing</p>
-                    <p v-if="shift.total_hours !== null">{{ shift.total_hours }} hrs</p>
-                    <p v-else>Active</p>
+                    <p v-else class="text-end">Ongoing</p>
+                    <p v-if="shift.total_hours !== null" class="text-end">{{ shift.total_hours }} hrs</p>
+                    <p v-else class="text-end">Active</p>
                 </div>
             </div>
-            <div class="grid grid-cols-2 border rounded-2xl h-min p-6 gap-4">
-                <div class="border-r">
+            <div class="grid grid-cols-2 bg-white drop-shadow-lg rounded-lg h-min p-6 gap-4">
+                <div class="border-r border-gray-400">
                     <h1 class="font-semibold text-xl mb-6">Staff List</h1>
                     <div v-for="user in inactiveStaff" :key="user.id" class="my-2 flex justify-between mr-4">
                         <div>
                             <p class="font-semibold">{{ user.full_name }}</p>
                             <p class="font-thin -mt-2 text-sm text-gray-600">{{ user.email }}</p>  
                         </div>
-                        <ArrowBigRightDash @click="startShift(user)" class="text-white p-1 w-6 h-6 rounded-sm bg-green-600 hover:cursor-pointer" />
+                        <ArrowBigRightDash @click="startShift(user)" class="text-white p-1 w-6 h-6 mr-2 rounded-sm bg-green-600 hover:cursor-pointer" />
                     </div> 
                 </div>
                 <div>

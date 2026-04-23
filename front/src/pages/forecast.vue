@@ -1,26 +1,36 @@
 <template>
     <div class="m-8">
-        <h1 class="text-2xl font-bold mt-4 mb-8">Forecast</h1>
-        <div class="flex gap-4 items-center mb-6">
-            <select v-model="days" class="border rounded-lg px-3 py-2 text-sm">
-                <option :value="7">7 days</option>
-                <option :value="14">14 days</option>
-                <option :value="21">21 days</option>
-            </select>
-            <button @click="loadAll" class="rounded-lg text-blue-600 bg-gray-50 px-4 py-2 outline
-            uppercase font-semibold transition-all hover:bg-blue-600 hover:text-white hover:cursor-pointer">
-                Generate
-            </button>
+        <h1 class="text-2xl font-medium text-blue-900 my-4 mb-6">Forecasting</h1>
+        <div class="bg-white drop-shadow-md rounded-lg p-4 w-1/2">
+            <div class="flex gap-4 justify-between items-center">
+                <div class="flex items-center justify-center gap-4">
+                   <p class="my-2 flex gap-2 font-thin"><CalendarDays class="text-blue-900" />Choose the duration of forecasting:</p> 
+                   <div class="border border-gray-400 w-min flex justify-center items-center px-2 py-1 rounded font-thin">
+                    <select v-model="days" class="w-24 outline-0">
+                        <option :value="7">7 days</option>
+                        <option :value="14">14 days</option>
+                        <option :value="21">21 days</option>
+                    </select>
+                   </div> 
+                </div>
+                <button @click="loadAll" class="rounded-lg text-blue-800 bg-gray-50 px-4 py-2 outline
+                uppercase font-semibold transition-all hover:bg-blue-800 hover:text-white hover:cursor-pointer">
+                    Generate
+                </button>
+            </div>
+            <div class="flex justify-center">
+                <!-- <p v-if="!loader">Click the button to generate the forecast. It might take few minutes</p> -->
+                <p v-if="loader" class="my-8 pt-2"><Loader2 class="w-10 h-10 animate-spin text-blue-600"/></p>
+                <Line v-if="render" :data="chartData" :options="chartOptions" class="mt-8" />
+            </div>
         </div>
-        <div class="w-5/6">
-            <p v-if="!loader">Click the button to generate the forecast. It might take few minutes</p>
-            <p v-if="loader"><Loader2 class="animate-spin "/></p>
-            <Line v-if="render" :data="chartData" :options="chartOptions" />
+        <div class="bg-white drop-shadow-md rounded-lg px-4 py-6 w-1/2 mt-4">
+            <p class="flex gap-2 font-semibold text-gray-400"><Hammer class="text-amber-600 animate-pulse" />Staff forecast in development...</p>
         </div>
-        <h1 class="text-2xl font-bold my-4">Staffing</h1>
-        <div>Loading...</div>
-        <h1 class="text-2xl font-bold my-4">Error rates</h1>
-        <div>Absolute mean error and accuracy</div>
+        <!-- <h1 class="text-2xl font-bold my-4">Staffing</h1>
+        <div>To be build</div> -->
+        <!-- <h1 class="text-2xl font-bold my-4">Error rates</h1>
+        <div>Absolute mean error and accuracy</div> -->
     </div>
 </template>
 
@@ -29,6 +39,7 @@ import api from '@/api'
 import { ref, computed } from 'vue'
 import { Line } from 'vue-chartjs'
 import { Loader2 } from 'lucide-vue-next'
+import { CalendarDays, Hammer } from 'lucide-vue-next'
 import {
   Chart as ChartJS,
   CategoryScale,
